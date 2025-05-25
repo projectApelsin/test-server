@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Панель управления</title>
+</head>
+<body>
+<h1>Добро пожаловать!</h1>
+
+<p>Привет, <span th:text="${username}">пользователь</span>!</p>
+
+<button id="logoutBtn">Выйти</button>
+
+<div id="message"></div>
+
+<script>
+  document.getElementById('logoutBtn').addEventListener('click', async function() {
+    try {
+      const response = await fetch('/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        document.getElementById('message').innerHTML = '<p style="color: green;">Вы вышли из системы</p>';
+        setTimeout(() => {
+          window.location.href = '/login?logout';
+        }, 1000);
+      } else {
+        document.getElementById('message').innerHTML = '<p style="color: red;">Ошибка выхода</p>';
+      }
+    } catch (error) {
+      document.getElementById('message').innerHTML = '<p style="color: red;">Ошибка соединения</p>';
+    }
+  });
+</script>
+</body>
+</html>
